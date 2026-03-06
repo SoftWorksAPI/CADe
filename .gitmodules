@@ -1,0 +1,6 @@
+[submodule "Frontend_CADe"]
+	path = Frontend_CADe
+	url = https://github.com/SoftWorksAPI/Frontend_CADe
+[submodule "Backend_CADe"]
+	path = Backend_CADe
+	url = https://github.com/SoftWorksAPI/Backend_CADe
