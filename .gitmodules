@@ -4,3 +4,6 @@
 [submodule "Backend_CADe"]
 	path = Backend_CADe
 	url = https://github.com/SoftWorksAPI/Backend_CADe
+[submodule "Python_Backend_CADe"]
+	path = Python_Backend_CADe
+	url = https://github.com/SoftWorksAPI/Python_Backend_CADe
