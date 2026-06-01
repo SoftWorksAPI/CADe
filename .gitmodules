@@ -1,9 +1,12 @@
 [submodule "Frontend_CADe"]
 	path = Frontend_CADe
 	url = https://github.com/SoftWorksAPI/Frontend_CADe
+	branch = sprint-1
 [submodule "Backend_CADe"]
 	path = Backend_CADe
 	url = https://github.com/SoftWorksAPI/Backend_CADe
+	branch = sprint-1
 [submodule "Python_Backend_CADe"]
 	path = Python_Backend_CADe
 	url = https://github.com/SoftWorksAPI/Python_Backend_CADe
+	branch = sprint-1
