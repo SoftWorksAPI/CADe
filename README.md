@@ -14,7 +14,7 @@
      <a href ="#documentacao">Documentação</a>  |
      <a href ="#requisitos">Requisitos</a>  |
      <a href ="#tecnologias">Tecnologias</a>  |
-     <!--<a href ="#como-usar">Como usar</a>   |-->
+     <a href ="#como-usar">Como usar</a>   |
      <a href ="#equipe">Equipe</a>
    </p>
 
@@ -82,6 +82,7 @@ Abaixo você encontra os links para cada documentação detalhada:
 | Sprint | Período       | Documentação |
 |--------|---------------|--------------|
 | Sprint 1 | 16/03 - 05/04 | [Acessar Documentação](documentation/sprint1/sprint1doc.md) |
+| Sprint 3 | 11/05 - 31/05 | [Acessar Documentação](documentation/sprint3/sprint3doc.md) |
 
 <!--
 ## 🎥 Video Apresentação
@@ -127,7 +128,7 @@ https://github.com/user-attachments/assets/
    
 ## 🖥️Tecnologias:
    <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=nextjs,react,javascript,typescript,nodejs,express,mysql,python,fastapi&perline=4">
+    <img src="https://skillicons.dev/icons?i=vue,react,javascript,typescript,nodejs,express,mysql,python,fastapi&perline=4">
    </a>
    
 <span id="ferramentas">
@@ -137,133 +138,160 @@ https://github.com/user-attachments/assets/
     <img src="https://skillicons.dev/icons?i=vscode,github,git&perline=4">
   </a>
 
-  <!-- 
 <span id="como-usar">
 
 
-## 🚀 Como utilizar
+## 🚀 Como Usar
 
-Este projeto é composto por três serviços independentes, mas integrados: **AIService_Junipy**, **Backend_Junipy** e **Frontend_Junipy**. Siga os passos abaixo para configurar e executar todos os componentes corretamente.
+### Pré-requisitos
 
-<details>
- <summary>Como utilizar</summary>
-
-## ⚙️ 0. Configurações e Pré-requisitos Gerais
-
-Certifique-se de ter instalado:
-
-* **Python 3.8+** e **pip**
-* **Java/JDK** e **Maven (mvn)**
-* **Node.js** e **npm**
-* **Docker** (necessário para o banco de dados MongoDB)
+- **Node.js 18+** instalado
+- **Python 3.14+** instalado
+- **uv** instalado (gerenciador de pacotes Python) — `pip install uv`
+- **MySQL 8.0** instalado e rodando na porta 3306
+- Chave de API do **OpenRouter** (para IA generativa)
 
 ---
 
-## 📌 1. Configuração e Execução do Banco de Dados (MongoDB)
+### Passo 1 — Clonar o repositório
 
-O Backend requer uma instância do MongoDB. Use o Docker para iniciar um contêiner rapidamente.
-
-1.  **Crie e Inicie o Contêiner MongoDB:**
-    ```bash
-    docker run -d -p 27017:27017 --name junipymongo mongo:7
-    ```
+```bash
+git clone https://github.com/SoftWorksAPI/CADe.git
+cd CADe
+```
 
 ---
 
-## 🧠 2. AIService — FastAPI (Python)
+### Passo 2 — Configurar o MySQL
 
-Este é o serviço de Inteligência Artificial.
+Crie o banco de dados no MySQL:
 
-### **Passos de Configuração**
+```sql
+CREATE DATABASE cadedb;
+```
 
-1.  **Crie e Ative um Ambiente Virtual:**
-    * **Linux/macOS:**
-        ```bash
-        python -m venv venv
-        source venv/bin/activate
-        ```
-    * **Windows:**
-        ```bash
-        python -m venv venv
-        venv\Scripts\activate
-        ```
-
-2.  **Instale as Dependências:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Configure o Modelo:**
-    * Crie uma cópia do arquivo `.env.example` e renomeie-a para **`.env`** no diretório do projeto.
-    * Preencha o arquivo `.env` com as chaves e configurações necessárias para a API de IA.
-
-### **Execução**
-
-* **Rode o Servidor FastAPI:**
-    ```bash
-    uvicorn main:app --reload
-    ```
-* **Acesso:** O serviço estará disponível em `http://localhost:8000`. A documentação **Swagger** pode ser acessada em `http://localhost:8000/docs`.
+Ou utilize um cliente MySQL (Workbench, DBeaver, etc.) para criar o banco `cadedb`. O Node.js cria as tabelas automaticamente ao iniciar (`sequelize.sync`).
 
 ---
 
-## ☕ 3. Backend — NutritionAgent (Spring Boot)
+### Passo 3 — Configurar e iniciar o Backend Python
 
-Este é o servidor de aplicação principal que se conecta ao Frontend, ao AIService e ao MongoDB.
+```bash
+# Entrar no diretório
+cd Python_Backend_CADe
 
-### **Configuração**
+# Instalar dependências com uv
+uv sync
 
-1.  **Configure a Conexão com o AIService:**
-    * No arquivo de configurações (geralmente `application.properties` ou `application.yml`, ou variáveis de ambiente), verifique e ajuste a URL base do AIService para `http://localhost:8000`.
+# Criar o arquivo .env na raiz do diretório
+```
 
-### **Execução**
+**Conteúdo do arquivo `Python_Backend_CADe/.env`:**
+```env
+OPENROUTER_API_KEY=sua_chave_aqui
+OPENROUTER_MODEL=openai/gpt-oss-120b:free
+NODE_BACKEND_URL=http://localhost:3000
+INTERNAL_API_KEY=cade-internal-key-2026
+CHROMA_PERSIST_PATH=./chroma_db
+DEBUG=false
+```
 
-* **Rode o Projeto (com Maven):**
-    ```bash
-    mvn spring-boot:run
-    ```
-* **Acesso:** O Backend estará disponível em `http://localhost:8080`.
+> Substitua `sua_chave_aqui` pela sua chave de API do OpenRouter.
 
----
+**Iniciar o servidor:**
 
-## 💻 4. Frontend — Junipy (Vue 3 + Vite)
+```bash
+uv run uvicorn src.main:app --host 0.0.0.0 --port 8080 --reload
+```
 
-Esta é a interface do usuário.
-
-### **Passos de Configuração**
-
-1.  **Instale as Dependências:**
-    ```bash
-    npm install
-    ```
-    > **Recomendação:** Use o **VSCode** com a extensão **Volar** para melhor experiência de desenvolvimento Vue.
-
-### **Execução**
-
-1.  **Rode em Modo Desenvolvimento:**
-    ```bash
-    npm run dev
-    ```
-* **Acesso:** A aplicação estará disponível em `http://localhost:5173`.
-
-### **Build para Produção (Opcional)**
-
-1.  **Gere os Arquivos Estáticos de Produção:**
-    ```bash
-    npm run build
-    ```
+O Python estará disponível em `http://localhost:8080`.
+Swagger interativo: `http://localhost:8080/docs`
 
 ---
 
-## ✅ Resumo da Ordem de Inicialização
+### Passo 4 — Configurar e iniciar o Backend Node.js
 
-1.  **MongoDB** (Docker)
-2.  **AIService** (Python)
-3.  **Backend** (Java/Spring Boot)
-4.  **Frontend** (Node/Vue)
+Em um **novo terminal**:
 
-   </details>
-   -->
+```bash
+# Entrar no diretório
+cd Backend_CADe
+
+# Instalar dependências
+npm install
+
+# Criar o arquivo .env na raiz do diretório
+```
+
+**Conteúdo do arquivo `Backend_CADe/.env`:**
+```env
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=cadedb
+DB_USER=root
+DB_PASSWORD=sua_senha_mysql
+JWT_SECRET=cade-jwt-secret-2026
+ADMIN_EMAIL=admin@admin.com
+ADMIN_PASSWORD=admin123
+PYTHON_API_URL=http://localhost:8080
+INTERNAL_API_KEY=cade-internal-key-2026
+```
+
+> Substitua `sua_senha_mysql` pela senha do seu MySQL. Os valores de `ADMIN_EMAIL` e `ADMIN_PASSWORD` definem o usuário administrador padrão criado automaticamente.
+
+**Iniciar o servidor:**
+
+```bash
+npm start
+```
+
+O Node.js estará disponível em `http://localhost:3000`.
+Swagger: `http://localhost:3000/api-docs`
+
+> Na primeira execução, o Node.js cria todas as tabelas no banco e o usuário admin padrão.
+
+---
+
+### Passo 5 — Configurar e iniciar o Frontend Vue.js
+
+Em um **novo terminal**:
+
+```bash
+# Entrar no diretório
+cd Vue_Frontend_CADe
+
+# Instalar dependências
+npm install
+
+# Criar o arquivo .env na raiz do diretório
+```
+
+**Conteúdo do arquivo `Vue_Frontend_CADe/.env`:**
+```env
+VITE_API_URL=http://localhost:3000
+```
+
+**Iniciar o servidor de desenvolvimento:**
+
+```bash
+npm run dev
+```
+
+O frontend estará disponível em `http://localhost:5173`.
+
+---
+
+### Passo 6 — Acessar a aplicação
+
+Abra o navegador em `http://localhost:5173` e faça login com as credenciais do admin padrão:
+
+```
+Email: admin@admin.com
+Senha: admin123
+```
+
+</details>
 
 <span id="equipe">
    
